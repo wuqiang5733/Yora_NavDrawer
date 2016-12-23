@@ -1,12 +1,13 @@
 package com.tuchangwei.yora.activities;
 
 import android.animation.Animator;
+import android.app.Application;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.view.View;
 
 import com.tuchangwei.yora.R;
@@ -17,13 +18,14 @@ public abstract class BaseActivity extends ActionBarActivity {
     protected YoraApplication application;
     protected Toolbar toolbar;
     protected NavDrawer navDrawer;
+    protected boolean isTablet;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e("BaseActivity","BlowonCreate");
-
         application = (YoraApplication)getApplication();
 
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        isTablet = displayMetrics.widthPixels/displayMetrics.density >= 600;
 
     }
 
@@ -62,10 +64,8 @@ public abstract class BaseActivity extends ActionBarActivity {
         }).setDuration(350).start();
     }
     protected void setNavDrawer(NavDrawer drawer) {
-        Log.e("BaseActivity","Before");
         this.navDrawer = drawer;
         this.navDrawer.create();
-        Log.e("BaseActivity","After");
 
         overridePendingTransition(0,0);
         View rootView = findViewById(android.R.id.content);

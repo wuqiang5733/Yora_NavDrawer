@@ -34,7 +34,7 @@ public class MainNavDrawer extends NavDrawer {
                 Toast.makeText(activity,"You have logged out!",Toast.LENGTH_SHORT).show();
             }
         });
-        // navDrawerView ： 整个滑动出来的那个界面
+
         displayNameText = (TextView)navDrawerView.findViewById(R.id.include_main_nav_drawer_displayName);
         avatarImage = (ImageView)navDrawerView.findViewById(R.id.include_main_nav_drawer_avatar);
 

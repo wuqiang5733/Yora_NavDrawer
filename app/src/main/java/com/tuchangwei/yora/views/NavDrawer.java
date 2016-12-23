@@ -1,10 +1,10 @@
 package com.tuchangwei.yora.views;
 
 import android.content.Intent;
+import android.media.Image;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,9 +31,8 @@ public class NavDrawer {
     public NavDrawer(BaseActivity activity) {
         this.activity = activity;
         items = new ArrayList<>();
-        // drawer_layout ： Inbox , Send Message , Contacts  , Profile 各有一个 drawer_layout
-        drawerLayout = (DrawerLayout) activity.findViewById(R.id.drawer_layout);  // 整个DrawerLayout
-        navDrawerView = (ViewGroup)activity.findViewById(R.id.nav_drawer);  // 整个滑动出来的那个界面
+        drawerLayout = (DrawerLayout) activity.findViewById(R.id.drawer_layout);
+        navDrawerView = (ViewGroup)activity.findViewById(R.id.nav_drawer);
         if (drawerLayout==null&&navDrawerView==null) {
             throw new RuntimeException("To use this class, you must have views with the ids of drawer_layout and nav_drawer");
         }
@@ -58,7 +57,6 @@ public class NavDrawer {
     }
     public  void addItem(NavDrawerItem item) {
         items.add(item);
-        // 注意下面这个特殊的用法
         item.navDrawer = this;
     }
     public void setSelectedItem(NavDrawerItem item) {
@@ -73,23 +71,20 @@ public class NavDrawer {
     public void create() {
         LayoutInflater layoutInflater = activity.getLayoutInflater();
         for (NavDrawerItem item :items) {
-            item.inflate(layoutInflater, navDrawerView);  // navDrawerView ： 整个滑动出来的那个界面
-            Log.e("NavDrawer",item.getClass().toString());
+            item.inflate(layoutInflater, navDrawerView);
         }
     }
     public static abstract class NavDrawerItem {
-//        在 ViewGroup container 的某个地方Inflate自己，并且根据自己是还被选中，改变 Appearance
         protected NavDrawer navDrawer;
         public abstract void inflate(LayoutInflater inflater, ViewGroup container);
         public abstract void setSelected(boolean isSelected);
     }
     public static class BasicNavDrawerItem extends  NavDrawerItem implements View.OnClickListener {
-//        显示 text 或者 badge (如果有的话) ,还有 icon
 
         private String text;
         private String badge;
         private int iconDrawabel;
-        private int containerId; //DrawerLayout当中的位置，像是列表位置，比如：Logout 是在最后一个
+        private int containerId;
 
         private ImageView icon;
         private TextView textView;
@@ -104,15 +99,15 @@ public class NavDrawer {
             this.containerId = containerId;
         }
         @Override
-        // 参数 ViewGroup navDrawerView ： 整个滑动出来的那个界面
         public void inflate(LayoutInflater inflater, ViewGroup navDrawerView) {
-            // container Id 这个参数传进来的是： include_main_nav_drawer_topItems
-            // 下一句通过 containerId 把 container 定位在了放每个 Item 的位置上
             ViewGroup container = (ViewGroup) navDrawerView.findViewById(containerId);
             if (container==null)
                 throw new RuntimeException("Nav drawer item " + text + " could not be attached to ViewGroup. View not found.");
-            // 下一句，如果不加最后的false，返回的View是包括每个Item的整体。
-            //加了false就是每个Item，所以得用addView添加到container里面。
+//            The root View of the inflated hierarchy.
+// If root was supplied, this is the root View;
+// otherwise it is the root of the inflated XML file.
+//          这个方法，如果root View提供了，返回的就是root view。如果root没有提供，返回的才是xml的根view。
+//            view = inflater.inflate(R.layout.list_item_nav_drawer, container);
             view = inflater.inflate(R.layout.list_item_nav_drawer, container,false);
             container.addView(view);
 
@@ -144,7 +139,6 @@ public class NavDrawer {
             }
         }
         public void setText(String text) {
-            // 下面这三个方法是用来 改变或者更新 元素的
             this.text = text;
             if (view != null) {
                 textView.setText(text);
